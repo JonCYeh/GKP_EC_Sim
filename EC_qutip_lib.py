@@ -378,7 +378,7 @@ def minimum_energy_decoding_gkp_2(meas_outcomes, D, alpha):
     """
     #meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
     
-    n_steps = len(meas_outcomes) - 1
+    n_steps = len(meas_outcomes)
 
     phi = 0.0
     bestphi = 0.0
