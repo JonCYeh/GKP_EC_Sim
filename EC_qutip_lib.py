@@ -409,16 +409,14 @@ def MCRound_MUDec(DN_par):
 	
 	X_0=Decision_0()
 	X_Forward=minimum_energy_decoding_gkp(QT, D/np.sqrt(2), D/np.sqrt(2), np.sqrt(np.pi))
-	X_Forward_Deqsig=minimum_energy_decoding_gkp(QT, D, D, np.sqrt(np.pi))
 	X_Forward_2=minimum_energy_decoding_gkp_2(QT, D, np.sqrt(np.pi))
 
 	Fail_0=1-Pdict[X_0]
 	Fail_Forward=1-Pdict[X_Forward]
-	Fail_Forward_Deqsig=1-Pdict[X_Forward_Deqsig]
 	Fail_Forward_2=1-Pdict[X_Forward_2]
 	Fail_MLD=1-Pdict[XML]
 
-	return tuple([Fail_0, Fail_Forward, Fail_Forward_Deqsig, Fail_Forward_2,Fail_MLD])
+	return tuple([Fail_0, Fail_Forward, Fail_Forward_2,Fail_MLD])
 
 
 def ExecMC_MUDec(par): 
@@ -429,7 +427,7 @@ def ExecMC_MUDec(par):
 	D_N_Array=par.Domain_t_MDomain
 	lenDN=len(D_N_Array)
 	stack_shape_in=(par.NP,lenDN,3)
-	stack_shape_out=(par.NP,lenDN,5)
+	stack_shape_out=(par.NP,lenDN,4)
 	
 	D_N_par=[tuple((d[0],d[1], par)) for d in D_N_Array]
 	
