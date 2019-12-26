@@ -1,0 +1,118 @@
+\documentclass{standalone}
+
+\usepackage{tikz,pgfplots, pgfplotstable}
+\usepackage{braket}
+\usepackage{xcolor}
+\usepackage{pgffor}
+
+\pgfplotsset{compat=1.7}
+
+\definecolor{color1}{RGB}{190,139,57}
+\definecolor{color2}{RGB}{124,115,203}
+\definecolor{color3}{RGB}{118,167,76}
+\definecolor{color4}{RGB}{196,90,156}
+\definecolor{color5}{RGB}{70,193,154}
+\definecolor{color6}{RGB}{199,85,81}
+
+
+\begin{document}
+
+\begin{tikzpicture}
+
+    \begin{axis}[
+    	name=plot,
+    	title = {All decoders},
+        ylabel=$1-2\overline{P}$,
+        xlabel={number of rounds $(M)$},
+        scaled ticks=false, 
+%        ytick distance=.1,
+		ymode=log,
+%		xmode=log,
+		ymin=.1,
+		ymax=1,
+        xmin=1,
+        xmax=10.1,
+        xtick=data,
+        ymajorgrids,
+        yminorgrids,
+        xmajorgrids,
+        grid style={gray!25!white},
+        yticklabel pos=right,
+        legend pos=south west,
+        legend style={font=\tiny},
+       % legend entries={{\hspace{-2em}$\Delta\in[.1\sqrt{2}, .7\sqrt{2}]$}, data, fit},
+        legend cell align=left,
+        every axis plot/.append style={thick}
+        ]
+        \addlegendimage{empty legend}
+        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.35,0.4,0.45\}$}
+		\addlegendimage{mark = diamond, mark size=2pt, color1}
+		\addlegendentry{MLD Decoder}
+		\addlegendimage{mark = otimes, mark size=2pt, color6}
+		\addlegendentry{Passive Decoder}
+		\addlegendimage{mark = square, mark size=2pt, color2}
+		\addlegendentry{Forward Decoder}
+		\addlegendimage{mark = triangle, mark size=2pt, color3}
+%		\addlegendentry{Class. Forward Decoder $2\sigma^2=\Delta^2$}
+%			
+		\foreach \F in {300,350,400,450}{
+			\pgfplotstablesort{\sortedtablemld}{../results_new/MLD_D\F.txt}
+			\addplot[
+			color=color1,
+			%only marks,
+			mark=diamond,
+			mark options={solid},
+			solid,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtablemld};}
+			
+		\foreach \F in {300,350,400,450}{
+			\pgfplotstablesort{\sortedtablezeno}{../results_new/0_D\F.txt}
+			\addplot[
+			color=color6,
+			%only marks,
+			mark=otimes,
+			mark options={solid},
+			dashed,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtablezeno};}
+
+		\foreach \F in {300,350,400,450}{
+			\pgfplotstablesort{\sortedtable}{../results_new/Forwardcoh_D\F.txt}
+			\addplot[
+			color=color2,
+			%only marks,
+			mark=square,
+			mark options={solid},
+			dotted,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtable};}
+			
+%		\foreach \F in {300,350,400,450}{
+%			\pgfplotstablesort{\sortedtable}{Forward_D\F.txt}
+%			\addplot[
+%			color=color3,
+%			%only marks,
+%			mark=triangle,
+%			mark options={solid},
+%			dashdotted,
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtable};}
+
+
+    \end{axis}
+
+\end{tikzpicture}
+\end{document}

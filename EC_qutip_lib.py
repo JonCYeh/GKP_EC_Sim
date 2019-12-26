@@ -282,7 +282,9 @@ def G(state,D, par):
 	qprobs=stabilizer_probq(state,qx,D, par)
 	QT=random.choice(qx,p=qprobs)
 	meas_projector_q=stabilizer_projq(QT,D, par)
+	state=meas_projector_q*state
 	state=state.unit()
+	
 	return state,PT,QT
 	
 def G_deterministic(state,D,PT,QT, par):
@@ -296,7 +298,9 @@ def G_deterministic(state,D,PT,QT, par):
 	state=state.unit()
 
 	meas_projector_q=stabilizer_projq(QT,D, par)
+	state=meas_projector_q*state
 	state=state.unit()
+	
 	return state
 
 def unbiased_decoder(QT, PT, D, Mrounds, par):
@@ -320,6 +324,32 @@ def unbiased_decoder(QT, PT, D, Mrounds, par):
 	
 	return
 	
+def MLD_ini0(QT, PT, D, Mrounds, par):
+	"""
+	MLD decoder using an initial 0 state. If outcome is logical 1, predict flip.
+	"""
+	b0=g_0n(D, par)
+	
+	for i in range(len(QT)):
+		b0,pt,qt=G_deterministic(b0,D,PT[i],QT[i], par)
+	
+	XML_b0, Pdict_b0=Decode(b0,par.QX,'z', par)
+	
+	return int(XML_b0)
+
+def MLD_ini1(QT, PT, D, Mrounds, par):
+	"""
+	MLD decoder using an initial 1 state. If outcome is logical 0, predict flip.
+	"""
+	b1=g_1n(D, par)
+	
+	for i in range(len(QT)):
+		b1,pt,qt=G_deterministic(b1,D,PT[i],QT[i], par)
+	
+	XML_b1, Pdict_b1=Decode(b0,par.QX,'z', par)
+	
+	return int(not XML_b1)
+
 def LogBin(q):
     return 0.5*(1+signal.square(np.sqrt(np.pi)*(q-0.5*np.sqrt(np.pi)),duty=0.5))
 
@@ -374,21 +404,42 @@ def energy_2(q_1, q_0, q_meas_1, D, alpha):
 
 
 def minimum_energy_decoding_gkp_2(meas_outcomes, D, alpha):
-    """minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
-    """
-    #meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
-    
-    n_steps = len(meas_outcomes)
+	"""minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
+	"""
+	#meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
+	n_steps = len(meas_outcomes)
 
-    phi = 0.0
-    bestphi = 0.0
-    for j in range(n_steps):
-        old_phi = bestphi
-        res_opt = minimize_scalar(energy_2, args=(old_phi, meas_outcomes[j], D, alpha))
-        phi = res_opt.x
-        bestphi = phi
+	phi = 0.0
+	bestphi = 0.0
+	for j in range(n_steps):
+		old_phi = bestphi
+		res_opt = minimize_scalar(energy_2, args=(old_phi, meas_outcomes[j], D, alpha))
+		phi = res_opt.x
+		bestphi = phi
 
-    return LogBin(bestphi)
+		
+	return LogBin(bestphi)
+	
+def minimum_energy_decoding_gkp_d(meas_outcomes, D, alpha):
+	"""minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
+	"""
+	#meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
+	Diff=[]
+	n_steps = len(meas_outcomes)
+
+	phi = 0.0
+	bestphi = 0.0
+	for j in range(n_steps):
+		old_phi = bestphi
+		res_opt = minimize_scalar(energy_2, args=(old_phi, meas_outcomes[j], D, alpha))
+		phi = res_opt.x
+		bestphi = phi
+		
+		#test energy difference between optimized and no-shift energies
+		diff_to_zero=energy_2(bestphi,old_phi, meas_outcomes[j], D, alpha)-energy_2(old_phi,old_phi, meas_outcomes[j], D, alpha)
+		Diff+=[diff_to_zero]
+		
+	return LogBin(bestphi), Diff
 
 def MCRound_MUDec(DN_par):
 	"""
@@ -406,7 +457,7 @@ def MCRound_MUDec(DN_par):
 	
 	XML, Pdict=Decode(State,par.QX,'z', par)
 
-	
+
 	X_0=Decision_0()
 	X_Forward=minimum_energy_decoding_gkp(QT, D/np.sqrt(2), D/np.sqrt(2), np.sqrt(np.pi))
 	X_Forward_2=minimum_energy_decoding_gkp_2(QT, D, np.sqrt(np.pi))
@@ -417,6 +468,7 @@ def MCRound_MUDec(DN_par):
 	Fail_MLD=1-Pdict[XML]
 
 	return tuple([Fail_0, Fail_Forward, Fail_Forward_2,Fail_MLD])
+
 
 
 def ExecMC_MUDec(par): 
@@ -449,6 +501,8 @@ def ExecMC_MUDec(par):
 
 	return [list(PFail),list(Psig)]
 
+
+
 def MCRound_MUDec_1in(DN_par):
 	"""
 	For Delta, M get error probabilities
@@ -475,6 +529,51 @@ def MCRound_MUDec_1in(DN_par):
 	Fail_MLD=1-Pdict[XML]
 
 	return tuple([Fail_0, Fail_Forward, Fail_Forward_2,Fail_MLD])
+
+def MCRound_MUDec_x0(DN_par):
+	"""
+	For Delta, M get error probabilities
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+	
+	random.seed()
+	State=par.g1[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G_deterministic(State,D, par)
+	
+	XML, Pdict=Decode(State,par.QX,'z', par)
+	
+	XML1=MLD_ini1(QT, PT, D, Mrounds, par)
+
+	Fail_MLD=1-Pdict[XML]
+	Fail_MLD1=1-Pdict[XML1]
+
+	return tuple([Fail_MLD, Fail_MLD1])
+	
+def MCRound_MUDec_x1(DN_par):
+	"""
+	For Delta, M get error probabilities
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+
+	random.seed()
+	State=par.g1[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G_deterministic(State,D, par)
+
+	XML, Pdict=Decode(State,par.QX,'z', par)
+	XML0=MLD_ini0(QT, PT, D, Mrounds, par)		
+
+	Fail_MLD=Pdict[XML]
+	Fail_MLD0=Pdict[XML0]
+
+	return tuple([Fail_MLD, Fail_MLD0])
 
 
 def ExecMC_MUDec_1in(par): 
@@ -578,14 +677,6 @@ def Track_Photons_Disp(DN_par):
 	for i in range(NRounds):
 		State,PT[i],QT[i]=G(State,D, par)
 		
-		#var_q[i+1]=var_q[i]*D**(-2)/(var_q[i]+D**(-2))
-		#var_p[i+1]=var_p[i]*D**(-2)/(var_p[i]+D**(-2))
-		
-		#env_q[i+1]=(env_q[i]*D**(-2)+QT[i]*var_q[i])/(var_q[i]+D**(-2))
-		#env_p[i+1]=(env_p[i]*D**(-2)-PT[i]*var_p[i])/(var_p[i]+D**(-2))
-		#pt_r=round(PT[i]/(2*np.sqrt(np.pi)))*(2*np.sqrt(np.pi))
-		#qt_r=round(QT[i]/(2*np.sqrt(np.pi)))*(2*np.sqrt(np.pi))
-		
 		alpha_disp=(-QT[i]+1j*PT[i])/np.sqrt(2)
 		
 		State=qutip.displace(par.NFock,alpha_disp)*State
@@ -645,7 +736,7 @@ def Exec_Photons_Disp(par):
 	
 	if par.parallel:
 		pool=Pool(par.NCores)
-		Photon_nums=pool.map(Track_Photons,flat_stack)
+		Photon_nums=pool.map(Track_Photons_Disp,flat_stack)
 	else:
 		Photon_nums=[Track_Photons_Disp(dn) for dn in flat_stack]
 	
@@ -656,3 +747,54 @@ def Exec_Photons_Disp(par):
 	SIG_Photon_nums=np.std(Photon_nums,axis=0)
 
 	return [list(AVG_Photon_nums),list(SIG_Photon_nums)]
+	
+def MCRound_Diff(DN_par):
+	"""
+	For Delta, M get energy differences to zero
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+	
+	random.seed()
+	State=par.g0[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G(State,D, par)
+	
+		
+	X_Forward_2, Diff=minimum_energy_decoding_gkp_d(QT, D, np.sqrt(np.pi))
+
+	return tuple(Diff)
+	
+def Exec_Diff(par): 
+	"""
+	receive list of tuples (D,Nrounds) and return <Differences> between no-shift- and optimized energy
+	"""
+	
+	D_N_Array=par.Domain_t_MDomain
+	lenDN=len(D_N_Array)
+	
+	stack_shape_in=(par.NP,lenDN,3)
+	stack_shape_out=(par.NP,lenDN,D_N_Array[0][1])
+	
+	D_N_par=[tuple((d[0],d[1], par)) for d in D_N_Array]
+	
+	Stacked_Domain=np.tile(np.array(D_N_par,dtype=tuple),(par.NP,1)).reshape(stack_shape_in) #### (NP x Parameters)
+
+	flat_stack=Stacked_Domain.reshape((par.NP*len(D_N_Array),3)) ###flattened
+	
+	if par.parallel:
+		pool=Pool(par.NCores)
+		Diffs=pool.map(MCRound_Diff,flat_stack)
+	else:
+		Diffs=[MCRound_Diff(dn) for dn in flat_stack]
+	
+	Diffs=np.array(list(Diffs))
+	print(Diffs)
+	Diffs=Diffs.reshape(stack_shape_out)
+
+	AVG_Diffs=np.mean(Diffs,axis=0)
+	SIG_Diffs=np.std(Diffs,axis=0)
+
+	return [list(AVG_Diffs),list(SIG_Diffs)]

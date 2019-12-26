@@ -19,7 +19,7 @@ import time
 import qutip
 
 #########################
-foldername='test_1in'
+foldername='test_new'
 Name='test'
 #########################
 parallel=True
@@ -34,7 +34,7 @@ Num_max=10
 qmax=Num_max*np.sqrt(np.pi)
 cutoff=200
 M_rounds_Min=1
-M_rounds_Max=3
+M_rounds_Max=10
 NFock=100
 #########################
 

@@ -1,0 +1,110 @@
+\documentclass{standalone}
+
+\usepackage{tikz,pgfplots, pgfplotstable}
+\usepackage{braket}
+\usepackage{xcolor}
+\usepackage{pgffor}
+
+\pgfplotsset{compat=1.7}
+
+\definecolor{color1}{RGB}{190,139,57}
+\definecolor{color2}{RGB}{124,115,203}
+\definecolor{color3}{RGB}{118,167,76}
+\definecolor{color4}{RGB}{196,90,156}
+\definecolor{color5}{RGB}{70,193,154}
+\definecolor{color6}{RGB}{199,85,81}
+
+
+\begin{document}
+
+\begin{tikzpicture}
+
+    \begin{axis}[
+    	name=plot,
+    	title = {Forward coherent},
+        ylabel=$1-2P_L$,
+        xlabel={number of rounds $(M)$},
+        scaled ticks=false, 
+%        ytick distance=.1,
+		ymode=log,
+%		xmode=log,
+		ymin=0.001,
+		ymax=1,
+        xmin=1,
+        xmax=5,
+        ymajorgrids,
+        yminorgrids,
+        xmajorgrids,
+        grid style={gray!25!white},
+        yticklabel pos=right,
+        legend pos=south west,
+        legend style={font=\scriptsize},
+       % legend entries={{\hspace{-2em}$\Delta\in[.1\sqrt{2}, .7\sqrt{2}]$}, data, fit},
+        legend cell align=left
+        ]
+        \addlegendimage{empty legend}
+        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.35,0.4,0.45\}$}
+		\addlegendimage{mark = diamond*, mark size=2pt, color6}
+		\addlegendentry{data}
+%		\addlegendimage{only marks, mark = x, mark size=2pt, color2}
+%		\addlegendentry{[data]}
+%		\addlegendimage{dashdotted, color5}
+%		\addlegendentry{[fit]}
+%		
+%		\foreach \F in {100,200,...,700}{
+%			\pgfplotstablesort{\sortedtable}{Merged_GKP_new2approx_MLD_sigma3digit_\F.txt}
+%			\addplot[
+%			color=color2,
+%			only marks,
+%			mark=x,
+%			mark options={solid},
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{n_steps}+1}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={2*1.96*sqrt(\thisrow{logical_error_rate}*(1-\thisrow{logical_error_rate})/\thisrow{trials})}]{\sortedtable};}
+%			
+		\foreach \F in {300,350,400,450}{
+			\pgfplotstablesort{\sortedtable}{Forwardcoh_D\F.txt}
+			\addplot[
+			color=color6,
+			%only marks,
+			mark=diamond*,
+			mark options={solid},
+			dashdotted,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}/sqrt(1000)}]{\sortedtable};}
+		
+%		\foreach \G in {1,2,3,...,9,10}{
+%			\pgfplotstablesort{\sortedtable}{JC2_Zoom_MLD_\G.txt}
+%			\addplot[
+%			color=color1,
+%			%only marks,
+%			mark=diamond*,
+%			mark options={solid},
+%			dashdotted,
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}/sqrt(1000)}]{\sortedtable};}		
+		
+%		\foreach \F in {100,200,...,700}{
+%			\pgfplotstablesort{\sortedtable}{Fit_Merged_GKP_new2approx_MLD_sigma3digit_\F.txt}
+%			\addplot[
+%			color=color5,
+%			mark options={solid},
+%			dashdotted,
+%			%				only marks, 
+%			%		mark size=2pt,
+%			]
+%			table [x expr={\thisrow{n_steps}+1}, y expr={1-2*\thisrow{logical_error_rate}}]{\sortedtable};}
+			
+%
+    \end{axis}
+
+\end{tikzpicture}
+\end{document}
