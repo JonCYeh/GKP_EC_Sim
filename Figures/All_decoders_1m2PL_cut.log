@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.25)  6 JAN 2020 09:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.25)  6 JAN 2020 10:37
 entering extended mode
-**./All_decoders_1m2PL.tex
-(All_decoders_1m2PL.tex
+**./All_decoders_1m2PL_cut.tex
+(All_decoders_1m2PL_cut.tex
 LaTeX2e <2018-12-01>
 (C:\Users\PC\AppData\Roaming\MiKTeX\2.9\tex/latex/standalone\standalone.cls
 Document Class: standalone 2018/03/26 v1.3a Class to compile TeX sub-files stan
@@ -535,8 +535,8 @@ Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
 \backup@length=\skip44
 \ar@cellbox=\box41
 )) (C:\Users\PC\AppData\Roaming\MiKTeX\2.9\tex/latex/braket\braket.sty)
-(All_decoders_1m2PL.aux)
-\openout1 = `All_decoders_1m2PL.aux'.
+(All_decoders_1m2PL_cut.aux)
+\openout1 = `All_decoders_1m2PL_cut.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
 LaTeX Font Info:    ... okay on input line 19.
@@ -607,44 +607,39 @@ Package pgfplots notification 'compat/show suggested version=true': you might b
 enefit from \pgfplotsset{compat=1.16} (current compat level: 1.7).
 
 PGFPlots: reading {../merged_results/MLD_D300.txt}
-PGFPlots: reading {../merged_results/MLD_D350.txt}
 PGFPlots: reading {../merged_results/MLD_D400.txt}
-PGFPlots: reading {../merged_results/MLD_D450.txt}
 PGFPlots: reading {../merged_results/0_D300.txt}
-PGFPlots: reading {../merged_results/0_D350.txt}
 PGFPlots: reading {../merged_results/0_D400.txt}
-PGFPlots: reading {../merged_results/0_D450.txt}
 PGFPlots: reading {../merged_results/Forwardcoh_D300.txt}
-PGFPlots: reading {../merged_results/Forwardcoh_D350.txt}
 PGFPlots: reading {../merged_results/Forwardcoh_D400.txt}
-PGFPlots: reading {../merged_results/Forwardcoh_D450.txt}
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 116.
+(Font)              <7> on input line 102.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 116.
+(Font)              <5> on input line 102.
 [1
 
 {C:/Users/PC/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-(All_decoders_1m2PL.aux) ) 
+(All_decoders_1m2PL_cut.aux) ) 
 Here is how much of TeX's memory you used:
- 23569 strings out of 492895
- 628119 string characters out of 3133488
- 1007300 words of memory out of 3000000
- 27088 multiletter control sequences out of 15000+200000
+ 23352 strings out of 492895
+ 623684 string characters out of 3133488
+ 884088 words of memory out of 3000000
+ 26883 multiletter control sequences out of 15000+200000
  3640 words of font info for 14 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 62i,18n,107p,736b,2491s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfo
-nts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb>
-<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Progra
-m Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/Mi
-KTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9
-/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
-pe1/public/amsfonts/cm/cmsy7.pfb>
-Output written on All_decoders_1m2PL.pdf (1 page, 86362 bytes).
+ 62i,18n,107p,740b,2497s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.
+pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/P
+rogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Fil
+es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/p
+ublic/amsfonts/cm/cmsy7.pfb>
+Output written on All_decoders_1m2PL_cut.pdf (1 page, 85880 bytes).
 PDF statistics:
- 41 PDF objects out of 1000 (max. 8388607)
+ 45 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

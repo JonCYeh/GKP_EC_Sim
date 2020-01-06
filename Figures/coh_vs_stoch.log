@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.25)  23 DEC 2019 09:05
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.25)  6 JAN 2020 09:53
 entering extended mode
 **./coh_vs_stoch.tex
 (coh_vs_stoch.tex
@@ -535,22 +535,22 @@ Package: array 2018/12/30 v2.4k Tabular extension package (FMi)
 \backup@length=\skip44
 \ar@cellbox=\box41
 )) (C:\Users\PC\AppData\Roaming\MiKTeX\2.9\tex/latex/braket\braket.sty)
-No file coh_vs_stoch.aux.
+(coh_vs_stoch.aux)
 \openout1 = `coh_vs_stoch.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-ABD: EveryShipout initializing macros
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+ ABD: EveryShipout initializing macros
 (C:\Users\PC\AppData\Roaming\MiKTeX\2.9\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count120
@@ -606,10 +606,10 @@ G,.JBIG2,.JB2,.eps]
 Package pgfplots notification 'compat/show suggested version=true': you might b
 enefit from \pgfplotsset{compat=1.16} (current compat level: 1.7).
 
-PGFPlots: reading {../new_results/MLD_D300.txt}
-PGFPlots: reading {../new_results/MLD_D350.txt}
-PGFPlots: reading {../new_results/MLD_D400.txt}
-PGFPlots: reading {../new_results/MLD_D450.txt}
+PGFPlots: reading {../merged_results/MLD_D300.txt}
+PGFPlots: reading {../merged_results/MLD_D350.txt}
+PGFPlots: reading {../merged_results/MLD_D400.txt}
+PGFPlots: reading {../merged_results/MLD_D450.txt}
 PGFPlots: reading {../../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma
 3digit_212.txt}
 PGFPlots: reading {../../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma
@@ -619,13 +619,13 @@ PGFPlots: reading {../../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma
 PGFPlots: reading {../../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma
 3digit_318.txt}
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 92.
+(Font)              <7> on input line 93.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 92.
-PGFPlots: reading {../new_results/MLD_D300.txt}
-PGFPlots: reading {../new_results/MLD_D350.txt}
-PGFPlots: reading {../new_results/MLD_D400.txt}
-PGFPlots: reading {../new_results/MLD_D450.txt}
+(Font)              <5> on input line 93.
+PGFPlots: reading {../merged_results/MLD_D300.txt}
+PGFPlots: reading {../merged_results/MLD_D350.txt}
+PGFPlots: reading {../merged_results/MLD_D400.txt}
+PGFPlots: reading {../merged_results/MLD_D450.txt}
 PGFPlots: reading {../../MLD_stoch/one_gkp_ds/lxtcc01_GKP_new2approx_MLD_sigma3
 digit_300.txt}
 PGFPlots: reading {../../MLD_stoch/one_gkp_ds/lxtcc01_GKP_new2approx_MLD_sigma3
@@ -639,10 +639,10 @@ digit_450.txt}
 {C:/Users/PC/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
 (coh_vs_stoch.aux) ) 
 Here is how much of TeX's memory you used:
- 23433 strings out of 492895
- 626248 string characters out of 3133488
- 973648 words of memory out of 3000000
- 26952 multiletter control sequences out of 15000+200000
+ 23449 strings out of 492895
+ 626661 string characters out of 3133488
+ 972212 words of memory out of 3000000
+ 26966 multiletter control sequences out of 15000+200000
  3640 words of font info for 14 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  62i,21n,107p,730b,2921s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -655,7 +655,7 @@ es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX
 type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
 blic/amsfonts/cm/cmsy5.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsf
 onts/cm/cmsy7.pfb>
-Output written on coh_vs_stoch.pdf (1 page, 89645 bytes).
+Output written on coh_vs_stoch.pdf (1 page, 89853 bytes).
 PDF statistics:
  45 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
