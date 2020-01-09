@@ -14,6 +14,7 @@
 \definecolor{color5}{RGB}{70,193,154}
 \definecolor{color6}{RGB}{199,85,81}
 
+\newcommand{\folder}{../results_succ}
 
 \begin{document}
 
@@ -21,15 +22,15 @@
 
     \begin{axis}[
     	name=plot,
-    	title = {All decoders},
-        ylabel=$\overline{P}$,
+    	%title = {All decoders},
+        ylabel=$1-2\overline{P}$,
         xlabel={number of rounds $(M)$},
         scaled ticks=false, 
 %        ytick distance=.1,
 		ymode=log,
 %		xmode=log,
-		%ymin=0,
-		ymax=.5,
+		ymin=.1,
+		ymax=1,
         xmin=1,
         xmax=10.1,
         xtick=data,
@@ -45,18 +46,21 @@
         every axis plot/.append style={thick}
         ]
         \addlegendimage{empty legend}
-        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.35,0.4,0.45\}$}
+        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.4\}$}
 		\addlegendimage{mark = diamond, mark size=2pt, color1}
-		\addlegendentry{MLD Decoder}
+		\addlegendentry{MLD decoder}
 		\addlegendimage{mark = otimes, mark size=2pt, color6}
-		\addlegendentry{Passive Decoder}
+		\addlegendentry{passive decoder}
 		\addlegendimage{mark = square, mark size=2pt, color2}
-		\addlegendentry{Forward Decoder}
+		\addlegendentry{forward 0 decoder}
 		\addlegendimage{mark = triangle, mark size=2pt, color3}
+		\addlegendentry{forward samp decoder}
+		%\addlegendimage{mark = triangle, mark size=2pt, color3}
 %		\addlegendentry{Class. Forward Decoder $2\sigma^2=\Delta^2$}
 %			
-		\foreach \F in {300,350,400,450}{
-			\pgfplotstablesort{\sortedtablemld}{../results_new/MLD_D\F.txt}
+		
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
 			\addplot[
 			color=color1,
 			%only marks,
@@ -67,10 +71,10 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{n_steps}}, y expr={\thisrow{logical_error_rate}}, y error expr={\thisrow{std}}]{\sortedtablemld};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}}]{\sortedtable};}
 			
-		\foreach \F in {300,350,400,450}{
-			\pgfplotstablesort{\sortedtablezeno}{../results_new/0_D\F.txt}
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
 			\addplot[
 			color=color6,
 			%only marks,
@@ -81,10 +85,10 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{n_steps}}, y expr={\thisrow{logical_error_rate}}, y error expr={\thisrow{std}}]{\sortedtablezeno};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_0}}, y error expr={sqrt(2)*\thisrow{s_P_0}}]{\sortedtable};}
 
-		\foreach \F in {300,350,400,450}{
-			\pgfplotstablesort{\sortedtable}{../results_new/Forwardcoh_D\F.txt}
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
 			\addplot[
 			color=color2,
 			%only marks,
@@ -95,21 +99,21 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{n_steps}}, y expr={\thisrow{logical_error_rate}}, y error expr={\thisrow{std}}]{\sortedtable};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward}}, y error expr={sqrt(2)*\thisrow{s_P_Forward}}]{\sortedtable};}
 			
-%		\foreach \F in {300,350,400,450}{
-%			\pgfplotstablesort{\sortedtable}{Forward_D\F.txt}
-%			\addplot[
-%			color=color3,
-%			%only marks,
-%			mark=triangle,
-%			mark options={solid},
-%			dashdotted,
-%			error bars/.cd, 
-%			y dir = both, 
-%			y explicit
-%			]
-%			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtable};}
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
+			\addplot[
+			color=color3,
+			%only marks,
+			mark=triangle,
+			mark options={solid},
+			dotted,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward_sample}}, y error expr={sqrt(2)*\thisrow{s_P_Forward_sample}}]{\sortedtable};}
 
 
     \end{axis}

@@ -48,7 +48,7 @@
         every axis plot/.append style={thick}
         ]
         \addlegendimage{empty legend}
-        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.35,0.4,0.45\}$}
+        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.4\}$}
 		\addlegendimage{mark = diamond, mark size=2pt, color6}
 		\addlegendentry{MLD Decoder, coherent sim.}
 		\addlegendimage{mark = square, mark size=2pt, color1}
@@ -60,7 +60,7 @@
 %		\addlegendimage{mark = triangle, mark size=2pt, color3}
 %		\addlegendentry{Forward Decoder $2\sigma^2=\Delta^2$}
 %			
-		\foreach \F in {300,350,400,450}{
+		\foreach \F in {300,400}{
 			\pgfplotstablesort{\sortedtablemld}{\folder/MLD_D\F.txt}
 			\addplot[
 			color=color6,
@@ -74,8 +74,8 @@
 			]
 			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtablemld};}
 
-		\foreach \F in {212,247,282,318}{
-			\pgfplotstablesort{\sortedtablemlds}{../../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}
+		\foreach \F in {212,282}{
+			\pgfplotstablesort{\sortedtablemlds}{../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}
 			\addplot[
 			color=color1,
 			%only marks,
@@ -120,9 +120,10 @@
         every axis plot/.append style={thick}
         ]
 %        \addlegendimage{empty legend}
-%        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.35,0.4,0.45\}$}
-%		\addlegendimage{mark = diamond, mark size=2pt, color6}
-%		\addlegendentry{MLD Decoder, coherent sim.}
+
+        \addlegendentry{\hspace{-2em}$\Delta\in \{0.3,0.4\}$}
+		\addlegendimage{mark = diamond, mark size=2pt, color6}
+		\addlegendentry{MLD Decoder, coherent sim.}
 		\addlegendimage{mark = square, mark size=2pt, color1}
 		\addlegendentry{MLD Decoder, stochastic sim. $\sigma^2=\Delta^2$}
 %		\addlegendimage{mark = otimes, mark size=2pt, color4}
@@ -132,7 +133,7 @@
 %		\addlegendimage{mark = triangle, mark size=2pt, color3}
 %		\addlegendentry{Forward Decoder $2\sigma^2=\Delta^2$}
 %			
-		\foreach \F in {300,350,400,450}{
+		\foreach \F in {300,400}{
 			\pgfplotstablesort{\sortedtablemld}{\folder/MLD_D\F.txt}
 			\addplot[
 			color=color6,
@@ -146,8 +147,8 @@
 			]
 			table [x expr={\thisrow{n_steps}}, y expr={1-2*\thisrow{logical_error_rate}}, y error expr={sqrt(2)*\thisrow{std}}]{\sortedtablemld};}
 
-		\foreach \F in {300,350,400,450}{
-			\pgfplotstablesort{\sortedtablemlds}{../../MLD_stoch/one_gkp_ds/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtablemlds}{../MLD_stoch/one_gkp_ds/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}
 			\addplot[
 			color=color1,
 			%only marks,
