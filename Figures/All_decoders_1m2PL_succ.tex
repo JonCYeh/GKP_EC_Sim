@@ -14,7 +14,7 @@
 \definecolor{color5}{RGB}{70,193,154}
 \definecolor{color6}{RGB}{199,85,81}
 
-\newcommand{\folder}{../results_succ}
+\newcommand{\folder}{../results_succ50000}
 
 \begin{document}
 
@@ -52,9 +52,9 @@
 		\addlegendimage{mark = otimes, mark size=2pt, color6}
 		\addlegendentry{passive decoder}
 		\addlegendimage{mark = square, mark size=2pt, color2}
-		\addlegendentry{forward 0 decoder}
-		\addlegendimage{mark = triangle, mark size=2pt, color3}
-		\addlegendentry{forward samp decoder}
+		\addlegendentry{forward decoder}
+%		\addlegendimage{mark = triangle, mark size=2pt, color3}
+%		\addlegendentry{forward samp decoder}
 		%\addlegendimage{mark = triangle, mark size=2pt, color3}
 %		\addlegendentry{Class. Forward Decoder $2\sigma^2=\Delta^2$}
 %			
@@ -101,19 +101,19 @@
 			]
 			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward}}, y error expr={sqrt(2)*\thisrow{s_P_Forward}}]{\sortedtable};}
 			
-		\foreach \F in {300,400}{
-			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
-			\addplot[
-			color=color3,
-			%only marks,
-			mark=triangle,
-			mark options={solid},
-			dotted,
-			error bars/.cd, 
-			y dir = both, 
-			y explicit
-			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward_sample}}, y error expr={sqrt(2)*\thisrow{s_P_Forward_sample}}]{\sortedtable};}
+%		\foreach \F in {300,400}{
+%			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
+%			\addplot[
+%			color=color3,
+%			%only marks,
+%			mark=triangle,
+%			mark options={solid},
+%			dotted,
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward_sample}}, y error expr={sqrt(2)*\thisrow{s_P_Forward_sample}}]{\sortedtable};}
 
 
     \end{axis}
