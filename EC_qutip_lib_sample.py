@@ -436,6 +436,11 @@ def energy_2(q_1, q_0, q_meas_1, D, alpha):
     """
     return (q_1 - q_0)**2*D**2/2+(q_meas_1 - q_1)**2*D**2/2 - cos(2*alpha*(q_meas_1 - q_1))/(4*alpha**2*D**2)-cos(alpha*(q_1-q_0))/(alpha**2*D**2)
 
+def energy_disp(q_1, q_0, q_meas_1, D, alpha):
+    """energy(phi_1, phi_0, q_1, D, K, alpha):
+    """
+    return (q_1 - q_0+q_meas_1)**2*D**2/2+(q_1)**2*D**2/2 - cos(2*alpha*q_1)/(4*alpha**2*D**2)-cos(alpha*(q_1-q_0+q_meas_1))/(alpha**2*D**2)
+
 
 def minimum_energy_decoding_gkp_2(meas_outcomes, D, alpha):
 	"""minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
@@ -448,6 +453,25 @@ def minimum_energy_decoding_gkp_2(meas_outcomes, D, alpha):
 	for j in range(n_steps):
 		old_phi = bestphi
 		res_opt = minimize_scalar(energy_2, args=(old_phi, meas_outcomes[j], D, alpha))
+		phi = res_opt.x
+		bestphi = phi
+
+		
+	return LogBin(bestphi)
+	
+def minimum_energy_decoding_gkp_disp(meas_outcomes, D, alpha):
+	"""minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
+	"""
+	#meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
+	n_steps = len(meas_outcomes)
+
+	phi = 0.0
+	bestphi = 0.0
+	for j in range(n_steps):
+		old_phi = bestphi
+		
+		res_opt = minimize_scalar(energy_disp, args=(old_phi, meas_outcomes[j], D, alpha))
+			
 		phi = res_opt.x
 		bestphi = phi
 
@@ -471,6 +495,34 @@ def minimum_energy_decoding_gkp_sample0(meas_outcomes, D, alpha, par):
 		for j in range(n_steps):
 			old_phi = bestphi
 			res_opt = minimize_scalar(energy_2, args=(old_phi, meas_outcomes[j], D, alpha))
+			phi = res_opt.x
+			bestphi = phi
+			
+		sample_decision+=[LogBin(bestphi)]
+	
+	sample_decision=np.asarray(sample_decision)
+	X=int(np.mean(sample_decision)>0.5)
+	
+	return X
+	
+def minimum_energy_decoding_gkp_sample0_disp(meas_outcomes, D, alpha, par):
+	"""minimum_energy_decoding_gkp(meas_outcomes, sigma, sigma_meas, alpha):
+	"""
+	#meas_outcomes=cmod(2*np.sqrt(np.pi)*meas_outcomes,2*np.pi)
+	n_steps = len(meas_outcomes)
+	
+	rho_in=np.abs(par.g0q[D])**2
+	
+	Num_samples=par.Forward_samples
+	sample_decision=[]
+	
+	for n in range(Num_samples):
+		phi_ini = random.choice(par.QX,p=rho_in)
+		bestphi = phi_ini
+		for j in range(n_steps):
+			old_phi = bestphi
+			res_opt = minimize_scalar(energy_disp, args=(old_phi, meas_outcomes[j], D, alpha))
+				
 			phi = res_opt.x
 			bestphi = phi
 			
@@ -598,7 +650,98 @@ def MCRound_MUDec_succ(DN_par):
 
 	return tuple(Fails.flatten())
 	
+def MCRound_MUDec_disp(DN_par):
+	"""
+	For Delta, M get error probabilities
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+	
+	random.seed()
+	State=par.g0[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	
+	Fails=np.zeros((NRounds,4))
+	
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G(State,D, par)
+		
+		alpha_disp=(-QT[i]+1j*PT[i])/np.sqrt(2)
+		
+		State=qutip.displace(par.NFock,alpha_disp)*State
+		State=State.unit()
+		
+		XML, Pdict=Decode(State,par.QX,'z', par)
+		
+		QT_hist=QT[:i+1]
+		PT_hist=PT[:i+1]
+		
 
+		X_sum=LogBin(np.sum(QT))
+		X_Forward_disp=minimum_energy_decoding_gkp_disp(QT_hist, D, np.sqrt(np.pi))
+		X_Forward_sample_disp=minimum_energy_decoding_gkp_sample0_disp(QT_hist, D, np.sqrt(np.pi), par)
+		
+		Fail_sum=1-Pdict[X_sum]
+		Fail_Forward_disp=1-Pdict[X_Forward_disp]
+		Fail_Forward_sample_disp=1-Pdict[X_Forward_sample_disp]
+		Fail_MLD=1-Pdict[XML]
+		
+		Fails[i]=np.asarray([Fail_sum, Fail_Forward_disp, Fail_Forward_sample_disp,Fail_MLD])
+
+	return tuple(Fails.flatten())
+	
+def MCRound_MUDec_memoryless(DN_par):
+	"""
+	For Delta, M get error probabilities
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+	
+	random.seed()
+	State=par.g0[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	
+	Fails=np.zeros((NRounds,2))
+	
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G(State,D, par)
+		
+		epsilon_q=cmod(QT[i],np.sqrt(np.pi))
+		epsilon_p=cmod(PT[i],np.sqrt(np.pi))
+		
+		Sq=np.round((QT[i]-epsilon_q)/(2*np.sqrt(np.pi)))
+		Sp=np.round((PT[i]-epsilon_p)/(2*np.sqrt(np.pi)))
+		
+		disp_q=Sq*2*np.sqrt(np.pi)+epsilon_q
+		disp_p=Sp*2*np.sqrt(np.pi)+epsilon_p
+		
+		alpha_disp=(-disp_q+1j*disp_p)/np.sqrt(2)
+		
+		State=qutip.displace(par.NFock,alpha_disp)*State
+		State=State.unit()
+		
+		XML, Pdict=Decode(State,par.QX,'z', par)
+		
+		# QT_hist=QT[:i+1]
+		# PT_hist=PT[:i+1]
+		
+
+		X_0=Decision_0()
+		# X_Forward=minimum_energy_decoding_gkp_2(QT_hist, D, np.sqrt(np.pi))
+		# X_Forward_sample=minimum_energy_decoding_gkp_sample0(QT_hist, D, np.sqrt(np.pi), par)
+		
+		Fail_0=1-Pdict[X_0]
+		# Fail_Forward=1-Pdict[X_Forward]
+		# Fail_Forward_sample=1-Pdict[X_Forward_sample]
+		Fail_MLD=1-Pdict[XML]
+		
+		Fails[i]=np.asarray([Fail_0, Fail_MLD])
+
+	return tuple(Fails.flatten())
+	
+	
 
 def ExecMC_MUDec_succ(par): 
 	"""
@@ -630,7 +773,65 @@ def ExecMC_MUDec_succ(par):
 
 	return [list(PFail),list(Psig)]
 
+def ExecMC_MUDec_disp(par): 
+	"""
+	receive list of tuples (D,Nrounds) and return PFail, Sigma_PFail for Decoders
+	"""
+	
+	D_N_Array=par.Domain_t_MDomain
+	lenDN=len(D_N_Array)
+	stack_shape_in=(par.NP,lenDN,3)
+	stack_shape_out=(par.NP,lenDN,D_N_Array[0][1],4)
+	
+	D_N_par=[tuple((d[0],d[1], par)) for d in D_N_Array]
+	
+	Stacked_Domain=np.tile(np.array(D_N_par,dtype=tuple),(par.NP,1)).reshape(stack_shape_in) #### (NP x Parameters)
 
+	flat_stack=Stacked_Domain.reshape((par.NP*lenDN,3)) ###flattened
+	
+	if par.parallel:
+		pool=Pool(par.NCores)
+		Failures=pool.map(MCRound_MUDec_disp,flat_stack)
+	else:
+		Failures=[MCRound_MUDec_disp(dn) for dn in flat_stack]
+	
+	Failures=np.array(list(Failures))
+	Failures=Failures.reshape(stack_shape_out)
+
+	PFail=np.mean(Failures,axis=0)
+	Psig=np.std(Failures,axis=0)
+
+	return [list(PFail),list(Psig)]
+
+def ExecMC_MUDec_memoryless(par): 
+	"""
+	receive list of tuples (D,Nrounds) and return PFail, Sigma_PFail for Decoders
+	"""
+	
+	D_N_Array=par.Domain_t_MDomain
+	lenDN=len(D_N_Array)
+	stack_shape_in=(par.NP,lenDN,3)
+	stack_shape_out=(par.NP,lenDN,D_N_Array[0][1],2)
+	
+	D_N_par=[tuple((d[0],d[1], par)) for d in D_N_Array]
+	
+	Stacked_Domain=np.tile(np.array(D_N_par,dtype=tuple),(par.NP,1)).reshape(stack_shape_in) #### (NP x Parameters)
+
+	flat_stack=Stacked_Domain.reshape((par.NP*lenDN,3)) ###flattened
+	
+	if par.parallel:
+		pool=Pool(par.NCores)
+		Failures=pool.map(MCRound_MUDec_memoryless,flat_stack)
+	else:
+		Failures=[MCRound_MUDec_memoryless(dn) for dn in flat_stack]
+	
+	Failures=np.array(list(Failures))
+	Failures=Failures.reshape(stack_shape_out)
+
+	PFail=np.mean(Failures,axis=0)
+	Psig=np.std(Failures,axis=0)
+
+	return [list(PFail),list(Psig)]
 
 def MCRound_MUDec_1in(DN_par):
 	"""
@@ -900,6 +1101,88 @@ def Exec_Photons_Disp(par):
 
 
 	return [list(AVG_Photon_nums),list(SIG_Photon_nums),list(AVG_Deltaqs),list(SIG_Deltaqs),list(AVG_Deltaps),list(SIG_Deltaps)]
+	
+	
+def Track_Photons_memoryless(DN_par):
+	"""
+	For Delta, M get photonnumbers
+	"""
+	D,NRounds, par=DN_par
+	NRounds=int(NRounds)
+	
+	random.seed()
+	State=par.g0[D]
+	QT=np.zeros(NRounds)
+	PT=np.zeros(NRounds)
+	
+	Num=np.zeros(NRounds+1)
+	Deltaq=np.zeros(NRounds+1)
+	Deltap=np.zeros(NRounds+1)
+	Deltaq[0],_=holevophase(State, 'q', par)
+	Deltap[0],_=holevophase(State, 'p', par)
+	
+	numberop=qutip.num(par.NFock)
+	Num[0]=qutip.expect(numberop, State)
+	
+	for i in range(NRounds):
+		State,PT[i],QT[i]=G(State,D, par)
+		
+		epsilon_q=cmod(QT[i],np.sqrt(np.pi))
+		epsilon_p=cmod(PT[i],np.sqrt(np.pi))
+		
+		Sq=np.round((QT[i]-epsilon_q)/(2*np.sqrt(np.pi)))
+		Sp=np.round((PT[i]-epsilon_p)/(2*np.sqrt(np.pi)))
+		
+		disp_q=Sq*2*np.sqrt(np.pi)+epsilon_q
+		disp_p=Sp*2*np.sqrt(np.pi)+epsilon_p
+		
+		alpha_disp=(-disp_q+1j*disp_p)/np.sqrt(2)
+		
+		State=qutip.displace(par.NFock,alpha_disp)*State
+		State=State.unit()
+		
+		Num[i+1]=qutip.expect(numberop, State)
+		Deltaq[i+1],_=holevophase(State, 'q', par)
+		Deltap[i+1],_=holevophase(State, 'p', par)
+	
+	return tuple(Num.tolist()+Deltaq.tolist()+Deltap.tolist())
+	
+
+def Exec_Photons_memoryless(par): 
+	"""
+	receive list of tuples (D,Nrounds) and return <n>(M), Sigma_<n>(M) with correctional displacement.
+	"""
+	
+	D_N_Array=par.Domain_t_MDomain
+	lenDN=len(D_N_Array)
+	Blocksize=D_N_Array[0][1]+1
+	
+	stack_shape_in=(par.NP,lenDN,3)
+	stack_shape_out=(par.NP,lenDN,3*Blocksize)
+	
+	D_N_par=[tuple((d[0],d[1], par)) for d in D_N_Array]
+	
+	Stacked_Domain=np.tile(np.array(D_N_par,dtype=tuple),(par.NP,1)).reshape(stack_shape_in) #### (NP x Parameters)
+
+	flat_stack=Stacked_Domain.reshape((par.NP*len(D_N_Array),3)) ###flattened
+	
+	if par.parallel:
+		pool=Pool(par.NCores)
+		Data=pool.map(Track_Photons_memoryless,flat_stack)
+	else:
+		Data=[Track_Photons_memoryless(dn) for dn in flat_stack]
+	
+	Data=np.array(list(Data))
+	Data=Data.reshape(stack_shape_out)
+	
+	AVG_Data=np.mean(Data,axis=0)
+	SIG_Data=np.std(Data,axis=0)
+	
+	AVG_Photon_nums, AVG_Deltaqs, AVG_Deltaps=AVG_Data[:,:Blocksize], AVG_Data[:,Blocksize:2*Blocksize], AVG_Data[:,2*Blocksize:3*Blocksize]
+	SIG_Photon_nums, SIG_Deltaqs, SIG_Deltaps=SIG_Data[:,:Blocksize], SIG_Data[:,Blocksize:2*Blocksize], SIG_Data[:,2*Blocksize:3*Blocksize]
+
+
+	return [list(AVG_Photon_nums),list(SIG_Photon_nums),list(AVG_Deltaqs),list(SIG_Deltaqs),list(AVG_Deltaps),list(SIG_Deltaps)]	
 	
 def MCRound_Diff(DN_par):
 	"""
