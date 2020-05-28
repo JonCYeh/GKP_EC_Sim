@@ -30,7 +30,7 @@
 %		ymode=log,
 %		xmode=log,
 		ymin=0.2,
-%		ymax=0.8,
+		ymax=0.8,
         ymajorgrids,
 %        yminorgrids,
 %        xmajorgrids,
@@ -61,7 +61,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_q_mean}}, y error expr={\thisrow{Delta_q_sig}}]{\sortedtable};
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_q_mean}}, y error expr={\thisrow{Delta_q_sig}/sqrt(10000)}]{\sortedtable};
 			
 			\addplot[
 			color=color6,
@@ -73,7 +73,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_p_mean}}, y error expr={\thisrow{Delta_p_sig}}]{\sortedtable};}
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_p_mean}}, y error expr={\thisrow{Delta_p_sig}/sqrt(10000)}]{\sortedtable};}
 		
 		
 			\pgfplotstablesort{\sortedtable}{\folder/Photons_D400.txt}{
@@ -87,7 +87,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_q_mean}}, y error expr={\thisrow{Delta_q_sig}}]{\sortedtable};
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_q_mean}}, y error expr={\thisrow{Delta_q_sig}/sqrt(10000)}]{\sortedtable};
 			
 			\addplot[
 			color=color1,
@@ -99,7 +99,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_p_mean}}, y error expr={\thisrow{Delta_p_sig}}]{\sortedtable};}    
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Delta_p_mean}}, y error expr={\thisrow{Delta_p_sig}/sqrt(10000)}]{\sortedtable};}    
 			\end{axis}
 
 \end{tikzpicture}

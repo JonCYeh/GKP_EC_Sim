@@ -72,7 +72,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}}]{\sortedtablemld};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}/sqrt(50000)}]{\sortedtablemld};}
 
 		\foreach \F in {212,282}{
 			\pgfplotstablesort{\sortedtablemlds}{../MLD_stoch/one_gkp_new/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}
@@ -145,7 +145,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}}]{\sortedtablemld};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}/sqrt(50000)}]{\sortedtablemld};}
 
 		\foreach \F in {300,400}{
 			\pgfplotstablesort{\sortedtablemlds}{../MLD_stoch/one_gkp_ds/lxtcc01_GKP_new2approx_MLD_sigma3digit_\F.txt}

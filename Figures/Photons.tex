@@ -1,0 +1,111 @@
+\documentclass{standalone}
+
+\usepackage{tikz,pgfplots, pgfplotstable}
+\usepackage{braket}
+\usepackage{xcolor}
+\usepackage{pgffor}
+
+\pgfplotsset{compat=1.7}
+
+\definecolor{color1}{RGB}{190,139,57}
+\definecolor{color2}{RGB}{124,115,203}
+\definecolor{color3}{RGB}{118,167,76}
+\definecolor{color4}{RGB}{196,90,156}
+\definecolor{color5}{RGB}{70,193,154}
+\definecolor{color6}{RGB}{199,85,81}
+
+\newcommand{\folder}{../results_photons}
+\newcommand{\folderdisp}{../results_photons_disp}
+\newcommand{\foldermem}{../results_photons_memoryless}
+
+\begin{document}
+
+\begin{tikzpicture}
+
+    \begin{axis}[
+    	name=plot,
+    	title = {},
+        ylabel=$\overline{n}$,
+        xlabel={number of rounds $(M)$},
+        scaled ticks=false, 
+%        ytick distance=.1,
+%		ymode=log,
+%		xmode=log,
+		ymin=0.2,
+%		ymax=0.8,
+        ymajorgrids,
+%        yminorgrids,
+%        xmajorgrids,
+        grid style={gray!25!white},
+        yticklabel pos=right,
+        legend pos=north west,
+        legend style={font=\scriptsize, fill=white, fill opacity=0.8, draw opacity=1 , text opacity=1}, 
+        legend cell align=left
+        ]
+        \addlegendimage{empty legend}
+        \addlegendentry{\hspace{-2em}$\Delta=0.3$}
+		\addlegendimage{mark = *, mark size=2pt, color6}
+        \addlegendentry{$\overline{n}$}
+        \addlegendimage{mark = diamond*,  mark size=2pt, color1}
+        \addlegendentry{$\overline{n}_{feedback}$}
+%		\addlegendimage{mark =square*,  mark size=2pt, color2}
+%        \addlegendentry{$\overline{n}_{memoryless}$}
+
+
+			\pgfplotstablesort{\sortedtable}{\folder/Photons_D300.txt}{
+			\addplot[
+			color=color6,
+			%only marks,
+			mark=*,
+			mark options={solid},
+			%dashdotted,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Photons_mean}}, y error expr={\thisrow{Photons_sig}/sqrt(10000)}]{\sortedtable};}
+			
+			\pgfplotstablesort{\sortedtable}{\folderdisp/Photons_D300.txt}{
+			\addplot[
+			color=color1,
+			%only marks,
+			mark=diamond*,
+			mark options={solid},
+			%dashdotted,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{M}}, y expr={\thisrow{Photons_mean}}, y error expr={\thisrow{Photons_sig}/sqrt(10000)}]{\sortedtable};}
+		
+%			\pgfplotstablesort{\sortedtable}{\foldermem/Photons_D300.txt}{
+%			\addplot[
+%			color=color2,
+%			%only marks,
+%			mark=square*,
+%			mark options={solid},
+%			%dashdotted,
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{M}}, y expr={\thisrow{Photons_mean}}, y error expr={\thisrow{Photons_sig}}]{\sortedtable};}
+			
+%			\pgfplotstablesort{\sortedtable}{\folderdisp/Photons_D400.txt}{
+%			\addplot[
+%			color=color1,
+%			%only marks,
+%			mark=*,
+%			mark options={solid},
+%			%dashdotted,
+%			error bars/.cd, 
+%			y dir = both, 
+%			y explicit
+%			]
+%			table [x expr={\thisrow{M}}, y expr={\thisrow{Photons_mean}}, y error expr={\thisrow{Photons_sig}}]{\sortedtable};
+			
+
+			\end{axis}
+
+\end{tikzpicture}
+\end{document}

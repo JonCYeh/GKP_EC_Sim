@@ -15,6 +15,7 @@
 \definecolor{color6}{RGB}{199,85,81}
 
 \newcommand{\folder}{../results_succ50000}
+\newcommand{\foldermem}{../results_memoryless}
 
 \begin{document}
 
@@ -29,7 +30,7 @@
 %        ytick distance=.1,
 		ymode=log,
 %		xmode=log,
-		ymin=.1,
+		ymin=0.13,
 		ymax=1,
         xmin=1,
         xmax=10.1,
@@ -53,6 +54,10 @@
 		\addlegendentry{passive decoder}
 		\addlegendimage{mark = square, mark size=2pt, color2}
 		\addlegendentry{forward decoder}
+		\addlegendimage{mark = x, mark size=2pt, color3}
+		\addlegendentry{memoryless decoder}
+%		\addlegendimage{mark = x, mark size=2pt, color4}
+%		\addlegendentry{memoryless MLD decoder}
 %		\addlegendimage{mark = triangle, mark size=2pt, color3}
 %		\addlegendentry{forward samp decoder}
 		%\addlegendimage{mark = triangle, mark size=2pt, color3}
@@ -71,7 +76,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}}]{\sortedtable};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_MLD}}, y error expr={sqrt(2)*\thisrow{s_P_MLD}/sqrt(50000)}]{\sortedtable};}
 			
 		\foreach \F in {300,400}{
 			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
@@ -85,7 +90,7 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_0}}, y error expr={sqrt(2)*\thisrow{s_P_0}}]{\sortedtable};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_0}}, y error expr={sqrt(2)*\thisrow{s_P_0}/sqrt(50000)}]{\sortedtable};}
 
 		\foreach \F in {300,400}{
 			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
@@ -99,21 +104,22 @@
 			y dir = both, 
 			y explicit
 			]
-			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward}}, y error expr={sqrt(2)*\thisrow{s_P_Forward}}]{\sortedtable};}
+			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward}}, y error expr={sqrt(2)*\thisrow{s_P_Forward}/sqrt(50000)}]{\sortedtable};}
 			
-%		\foreach \F in {300,400}{
-%			\pgfplotstablesort{\sortedtable}{\folder/results_D\F.txt}
-%			\addplot[
-%			color=color3,
-%			%only marks,
-%			mark=triangle,
-%			mark options={solid},
-%			dotted,
-%			error bars/.cd, 
-%			y dir = both, 
-%			y explicit
-%			]
-%			table [x expr={\thisrow{M}+1}, y expr={1-2*\thisrow{P_Forward_sample}}, y error expr={sqrt(2)*\thisrow{s_P_Forward_sample}}]{\sortedtable};}
+		\foreach \F in {300,400}{
+			\pgfplotstablesort{\sortedtable}{\foldermem/memoryless_results50k_D\F.txt}
+			\addplot[
+			color=color3,
+			%only marks,
+			mark=x,
+			mark options={solid},
+			dashed,
+			error bars/.cd, 
+			y dir = both, 
+			y explicit
+			]
+			table [x expr={\thisrow{M}}, y expr={1-2*\thisrow{P_memoryless}}, y error expr={sqrt(2)*\thisrow{s_P_memoryless}/sqrt(50000)}]{\sortedtable};}
+			
 
 
     \end{axis}
